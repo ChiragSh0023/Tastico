@@ -1,0 +1,15 @@
+{
+  "name": "myapp",
+  "version": "1.0.0",
+  "description": "This is an app built by Chirag Sharma",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Chirag Sharma",
+  "license": "ISC",
+  "dependencies": {
+    "parcel": "^2.12.0",
+    "react-dom": "^18.3.1"
+  }
+}
