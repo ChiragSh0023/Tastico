@@ -1,4 +1,4 @@
-import starImage from "../assets/star.png";
+import starImage from "../assets/img/star.png";
 import CLOUDINARYBASEURL from "../utils/constans";
 
 const RestaurantCard = (props) => {

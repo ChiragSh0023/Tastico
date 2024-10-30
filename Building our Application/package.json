@@ -2,7 +2,7 @@
   "name": "myapp",
   "version": "1.0.0",
   "description": "This is an app built by Chirag Sharma",
-  "main": "index.js",
+  "main": "App.js",
   "scripts": {
     "start": "parcel index.html",
     "build": "parcel build index.html",
@@ -13,7 +13,8 @@
   "dependencies": {
     "parcel": "^2.12.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.26.1"
   },
   "devDependencies": {
     "process": "^0.11.10"
