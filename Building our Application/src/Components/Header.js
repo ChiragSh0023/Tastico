@@ -5,17 +5,15 @@ import Logo from "../assets/img/logo.jpg";
 const Header = () => {
   const [btnName, setBtnName] = useState("Login");
 
-  useEffect(() => {
-    console.log("UseEffect called!");
-  }, [btnName]);
-
   return (
     <div className="header">
       <div className="logo-container">
-        <img className="logo" src={Logo} alt="Logo" />
+        <Link to="/">
+          <img className="logo" src={Logo} alt="Logo" />
+        </Link>
       </div>
 
-      <div className="nav-items">
+      <div className="nav-items font-family">
         <ul>
           <li>
             <Link to="/">Home</Link>

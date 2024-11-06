@@ -1,8 +1,11 @@
-import Header from "./Header";
+import Logo from "../assets/img/logo.jpg";
 
 const About = () => {
   return (
-    <div className="main-block">
+    <div className="main-block font-family">
+      <div>
+        <img className="about-img" src={Logo} />
+      </div>
       <h3 className="heading-block">About us</h3>
       <p className="content-block">
         Welcome to Fast Delivery! At Fast Delivery, we are passionate about
