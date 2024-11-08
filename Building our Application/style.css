@@ -531,3 +531,29 @@ This is the CSS for MenuItem component
   border-bottom: 0.5px solid #d3d3d3;
   margin: 20px 0;
 }
+
+/*
+Css for User component
+*/
+.user-card {
+  font-family: "Gilroy_Medium";
+  margin-top: 30px;
+  border: 1px solid black;
+  padding: 17px;
+  display: flex;
+  width: max-content;
+  justify-content: space-between;
+}
+
+.user-card-details {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  word-break: break-all;
+}
+
+.user-card img {
+  max-width: 100px;
+  height: 100%;
+  border-radius: 5px;
+}

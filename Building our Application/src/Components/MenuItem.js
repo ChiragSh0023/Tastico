@@ -5,7 +5,6 @@ import { menuItemImageUrl } from "../utils/constants";
 
 const MenuItem = (props) => {
   const { menuItem } = props;
-  console.log(menuItem);
   return (
     <>
       <div className="menu-item">

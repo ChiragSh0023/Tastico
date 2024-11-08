@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import Header from "./Components/Header";
 import Body from "./Components/Body";
-import About from "./Components/About";
+import AboutClass from "./Components/About";
 import Contact from "./Components/Contact";
 import Error from "./Components/Error";
 import Footer from "./Components/Footer";
@@ -30,7 +30,7 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "/about",
-        element: <About />,
+        element: <AboutClass />,
       },
       {
         path: "/contact",

@@ -53,7 +53,7 @@ const RestaurantMenu = () => {
         dish.name.toLowerCase().includes(searchText.toLowerCase())
       );
       setFilteredDishes(filteredDishesOnSearch);
-      console.log(filteredDishesOnSearch);
+      // console.log(filteredDishesOnSearch);
     }
   };
 
@@ -110,9 +110,9 @@ const RestaurantMenu = () => {
 
           <div>
             <div className="res-discounts-container">
-              {aggregatedDiscountInfo?.descriptionList.map((coupon) => {
+              {aggregatedDiscountInfo?.descriptionList.map((coupon, index) => {
                 return (
-                  <div className="res-discounts-card">
+                  <div className="res-discounts-card" key={index}>
                     <div>
                       <img src={offerImage} height="48px" width="48px" />
                     </div>
@@ -150,7 +150,7 @@ const RestaurantMenu = () => {
 
       <div className="menu-continer">
         {filteredDishes.map((dish) => (
-          <MenuItem menuItem={dish} />
+          <MenuItem menuItem={dish} key={dish.id} />
         ))}
       </div>
     </div>
