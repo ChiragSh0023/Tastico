@@ -557,3 +557,26 @@ Css for User component
   height: 100%;
   border-radius: 5px;
 }
+
+/*
+This is the CSS for Offline Container
+*/
+
+.offline-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 22px;
+  margin: 60px 0;
+}
+
+.oops-message {
+  font-family: "Gilroy_Bold";
+  font-size: 39px;
+}
+
+.retry-message {
+  font-family: "Gilroy_Medium";
+  font-size: 18px;
+}

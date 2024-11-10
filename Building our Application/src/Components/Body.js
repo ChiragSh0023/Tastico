@@ -2,6 +2,8 @@ import RestaurantCard from "./RestaurantCard";
 import { useEffect, useMemo, useState } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
+import useOnlineStatus from "../utils/useOnlineStatus";
+import Offline from "./Offline";
 
 const getRestaurantURL =
   "https://www.swiggy.com/dapi/restaurants/list/v5?lat=26.8763189&lng=75.7518921&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING";
@@ -12,6 +14,11 @@ const Body = () => {
   const [initialListOfRestaurants, setInitialListOfRestaurants] = useState([]);
   let [filterMode, setFilterMode] = useState(false);
   let [searchText, setSearchText] = useState("");
+
+  const onlineStatus = useOnlineStatus();
+  if (onlineStatus === false) {
+    return <Offline />;
+  }
 
   useEffect(() => {
     fetchData();

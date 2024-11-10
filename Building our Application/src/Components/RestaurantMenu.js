@@ -1,63 +1,46 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getRestaurantMenu } from "../utils/constants";
 import MenuItem from "./MenuItem";
 import ShimmerMenu from "./ShimmerMenu";
 import starImage from "../assets/img/star.png";
 import offerImage from "../assets/img/offers.png";
 import searchIcon from "../assets/img/search-icon.png";
+import useRestaurantMenu from "../utils/useRestaurantMenu";
+import useOnlineStatus from "../utils/useOnlineStatus";
+import Offline from "./Offline";
 
 const RestaurantMenu = () => {
   const { resId } = useParams();
-  let [menu, setMenu] = useState(null);
-  let [dishes, setDishes] = useState(null);
   let [filteredDishes, setFilteredDishes] = useState(null);
   let [searchText, setSearchText] = useState("");
+  const searchInputRef = useRef(null);
+
+  const resMenu = useRestaurantMenu(resId);
+
+  const onlineStatus = useOnlineStatus();
+  if (onlineStatus === false) {
+    return <Offline />;
+  }
 
   useEffect(() => {
-    fetchMenu();
-  }, []);
-
-  const fetchMenu = async () => {
-    let menuItems = await fetch(
-      getRestaurantMenu + resId + "&catalog_qa=undefined"
-    );
-    menuItems = await menuItems.json();
-    setMenu(menuItems?.data);
-    // console.log(menuItems?.data);
-    setDishesItems(menuItems?.data);
-  };
-
-  const setDishesItems = (menu) => {
-    const items =
-      menu?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card
-        ?.itemCards ||
-      menu?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card
-        ?.itemCards ||
-      menu?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card?.categories.flatMap(
-        (obj) => obj.itemCards
-      );
-    const dishes = items.map((card) => {
-      return card?.card?.info;
-    });
-    console.log(dishes);
-    setDishes(dishes);
-    setFilteredDishes(dishes);
-  };
+    setFilteredDishes(resMenu?.dishes);
+    searchInputRef?.current?.scrollIntoView({ behavior: "smooth" });
+  }, [resMenu?.dishes]);
 
   const searchDishes = () => {
     if (searchText === "") {
-      setFilteredDishes(dishes);
+      setFilteredDishes(resMenu.dishes);
     } else {
-      const filteredDishesOnSearch = dishes.filter((dish) =>
+      const filteredDishesOnSearch = resMenu.dishes.filter((dish) =>
         dish.name.toLowerCase().includes(searchText.toLowerCase())
       );
       setFilteredDishes(filteredDishesOnSearch);
-      // console.log(filteredDishesOnSearch);
     }
   };
 
-  if (!menu) return <ShimmerMenu />;
+  if (resMenu === null) {
+    return <ShimmerMenu />;
+  }
 
   const {
     name,
@@ -69,7 +52,7 @@ const RestaurantMenu = () => {
     locality,
     areaName,
     aggregatedDiscountInfo,
-  } = menu?.cards[2]?.card?.card?.info;
+  } = resMenu;
 
   return (
     <div className="main-menu-component">
@@ -138,6 +121,7 @@ const RestaurantMenu = () => {
 
       <div className="search-input-container">
         <input
+          ref={searchInputRef}
           className="search-menu-input"
           placeholder="Search for dishes..."
           value={searchText}
@@ -149,7 +133,7 @@ const RestaurantMenu = () => {
       </div>
 
       <div className="menu-continer">
-        {filteredDishes.map((dish) => (
+        {filteredDishes?.map((dish) => (
           <MenuItem menuItem={dish} key={dish.id} />
         ))}
       </div>
