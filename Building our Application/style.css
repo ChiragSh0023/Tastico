@@ -210,16 +210,6 @@
   margin: auto;
 }
 
-.error-ele {
-  margin: 28px 48px 0;
-}
-
-.err-img {
-  display: block;
-  height: 257px;
-  margin: auto;
-}
-
 .footer {
   display: flex;
   justify-content: center;
@@ -579,4 +569,21 @@ This is the CSS for Offline Container
 .retry-message {
   font-family: "Gilroy_Medium";
   font-size: 18px;
+}
+
+/*
+This is the CSS for error component
+*/
+
+.error-container {
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-top: 50px;
+}
+
+.error-ele {
+  font-family: "Gilroy_Medium";
 }
