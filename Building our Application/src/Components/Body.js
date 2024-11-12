@@ -55,33 +55,39 @@ const Body = () => {
     setListOfRestaurants(searchedRestaurants);
   };
 
-  return listOfRestaurants.length === 0 ? (
+  return initialListOfRestaurants.length === 0 ? (
     <Shimmer />
   ) : (
     <div className="body">
-      <div className="search">
+      <div className="w-[90vw] m-auto my-8">
         <input
           type="text"
-          className="search-box"
+          className="border mr-2 border-black px-2 py-1 text-sm"
           value={searchText}
           onChange={(e) => {
             setSearchText(e?.target?.value);
           }}
         />
-        <button className="search-btn" onClick={searchInRestaurants}>
+
+        <button
+          className="border border-solid border-grey py-1 px-2 mx-2 text-sm rounded-lg"
+          onClick={searchInRestaurants}
+        >
           Search
         </button>
-      </div>
-      <div className="filter">
-        <button className="filter-btn" onClick={toggleFilter}>
+
+        <button
+          className="border border-solid border-grey py-1 px-2 mx-2 text-sm rounded-lg"
+          onClick={toggleFilter}
+        >
           {filterMode ? "Get All Restaurants" : "Get Top Rated Restaurants"}
         </button>
       </div>
 
       {listOfRestaurants.length === 0 ? (
-        <div className="no-result">No result found 😅</div>
+        <div className="w-[90vw] m-auto mb-4">No result found 😅</div>
       ) : (
-        <div className="restaurant-container">
+        <div className="flex flex-wrap gap-x-28 gap-y-12 w-[90vw] m-auto my-8">
           {listOfRestaurants.map((restaurant) => (
             <Link
               to={`/restaurant/${restaurant?.info?.id}`}

@@ -22,7 +22,7 @@ const MenuItem = (props) => {
             ₹ {(menuItem?.price || menuItem.defaultPrice) / 100}
           </div>
           <div className="item-rating">
-            <img src={starRating} height="13" />{" "}
+            <img src={starRating} style={{ height: "13px" }} />{" "}
             {menuItem?.ratings?.aggregatedRating?.rating}
           </div>
           <div className="item-price" style={{ fontSize: "13px" }}>
