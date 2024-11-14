@@ -1,12 +1,11 @@
-import RestaurantCard from "./RestaurantCard";
-import { useEffect, useMemo, useState } from "react";
+import RestaurantCard, { withOneLiteDelivery } from "./RestaurantCard";
+import { useContext, useEffect, useMemo, useState } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/useOnlineStatus";
 import Offline from "./Offline";
-
-const getRestaurantURL =
-  "https://www.swiggy.com/dapi/restaurants/list/v5?lat=26.8763189&lng=75.7518921&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING";
+import { getRestaurantURL } from "../utils/constants";
+import UserContext from "../utils/UserContext";
 
 const Body = () => {
   // Creating a local state variable
@@ -20,9 +19,18 @@ const Body = () => {
     return <Offline />;
   }
 
+  const RestaurantCardOneLite = withOneLiteDelivery(RestaurantCard);
+
+  const { loggedInUser, updateUserName } = useContext(UserContext);
+  let [userNameText, setUserNameText] = useState(loggedInUser);
+
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    setUserNameText(loggedInUser);
+  }, [loggedInUser]);
 
   const fetchData = async () => {
     let response = await fetch(getRestaurantURL);
@@ -55,33 +63,55 @@ const Body = () => {
     setListOfRestaurants(searchedRestaurants);
   };
 
-  return initialListOfRestaurants.length === 0 ? (
+  const onInputClick = () => {
+    updateUserName(userNameText);
+  };
+
+  return initialListOfRestaurants?.length === 0 ? (
     <Shimmer />
   ) : (
     <div className="body">
-      <div className="w-[90vw] m-auto my-8">
-        <input
-          type="text"
-          className="border mr-2 border-black px-2 py-1 text-sm"
-          value={searchText}
-          onChange={(e) => {
-            setSearchText(e?.target?.value);
-          }}
-        />
+      <div className="w-[90vw] m-auto my-8 flex justify-between">
+        <div>
+          <input
+            type="text"
+            className="border mr-2 border-black px-2 py-1 text-sm"
+            value={searchText}
+            onChange={(e) => {
+              setSearchText(e?.target?.value);
+            }}
+          />
 
-        <button
-          className="border border-solid border-grey py-1 px-2 mx-2 text-sm rounded-lg"
-          onClick={searchInRestaurants}
-        >
-          Search
-        </button>
+          <button
+            className="border border-solid border-grey py-1 px-2 mx-2 text-sm rounded-lg"
+            onClick={searchInRestaurants}
+          >
+            Search
+          </button>
 
-        <button
-          className="border border-solid border-grey py-1 px-2 mx-2 text-sm rounded-lg"
-          onClick={toggleFilter}
-        >
-          {filterMode ? "Get All Restaurants" : "Get Top Rated Restaurants"}
-        </button>
+          <button
+            className="border border-solid border-grey py-1 px-2 mx-2 text-sm rounded-lg"
+            onClick={toggleFilter}
+          >
+            {filterMode ? "Get All Restaurants" : "Get Top Rated Restaurants"}
+          </button>
+        </div>
+        <div className="flex">
+          <input
+            type="text"
+            value={userNameText}
+            className="border mr-2 border-black px-2 py-1 text-sm"
+            onChange={(e) => {
+              setUserNameText(e.target.value);
+            }}
+          />
+          <button
+            className="border border-solid border-grey py-1 px-2 mx-2 text-sm rounded-lg"
+            onClick={onInputClick}
+          >
+            Update Username
+          </button>
+        </div>
       </div>
 
       {listOfRestaurants.length === 0 ? (
@@ -93,7 +123,11 @@ const Body = () => {
               to={`/restaurant/${restaurant?.info?.id}`}
               key={restaurant?.info?.id}
             >
-              <RestaurantCard resData={restaurant} />
+              {restaurant?.info?.badges?.imageBadges?.length > 0 ? (
+                <RestaurantCardOneLite resData={restaurant} />
+              ) : (
+                <RestaurantCard resData={restaurant} />
+              )}
             </Link>
           ))}
         </div>

@@ -14,7 +14,7 @@ const Error = () => {
       <p className="error-ele">
         {err.status} : {err.statusText}
       </p>
-      <button className="item-add-btn error-ele">
+      <button className="border border-solid border-[#f0f0f0] w-28 rounded-lg h-9 text-center bg-white">
         <Link to="/" style={{ color: "black" }}>
           Go to Home!
         </Link>

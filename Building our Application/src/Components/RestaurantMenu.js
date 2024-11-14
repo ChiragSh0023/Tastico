@@ -8,14 +8,15 @@ import searchIcon from "../assets/img/search-icon.png";
 import useRestaurantMenu from "../utils/useRestaurantMenu";
 import useOnlineStatus from "../utils/useOnlineStatus";
 import Offline from "./Offline";
+import RestaurantCategory from "./RestaurantFoodCategory";
 
 const RestaurantMenu = () => {
   const { resId } = useParams();
-  let [filteredDishes, setFilteredDishes] = useState(null);
-  let [searchText, setSearchText] = useState("");
-  const searchInputRef = useRef(null);
+  const [showIndex, setShowIndex] = useState(0);
 
   const resMenu = useRestaurantMenu(resId);
+
+  const categoryRefs = useRef([]);
 
   const onlineStatus = useOnlineStatus();
   if (onlineStatus === false) {
@@ -23,20 +24,22 @@ const RestaurantMenu = () => {
   }
 
   useEffect(() => {
-    setFilteredDishes(resMenu?.dishes);
-    searchInputRef?.current?.scrollIntoView({ behavior: "smooth" });
+    if (categoryRefs.current[0]) {
+      categoryRefs.current[0].scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    }
   }, [resMenu?.dishes]);
 
-  const searchDishes = () => {
-    if (searchText === "") {
-      setFilteredDishes(resMenu.dishes);
-    } else {
-      const filteredDishesOnSearch = resMenu.dishes.filter((dish) =>
-        dish.name.toLowerCase().includes(searchText.toLowerCase())
-      );
-      setFilteredDishes(filteredDishesOnSearch);
+  useEffect(() => {
+    if (categoryRefs.current[showIndex]) {
+      categoryRefs.current[showIndex].scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     }
-  };
+  }, [showIndex]);
 
   if (resMenu === null) {
     return <ShimmerMenu />;
@@ -55,56 +58,68 @@ const RestaurantMenu = () => {
   } = resMenu;
 
   return (
-    <div className="main-menu-component">
-      <h1 className="res-heading  font-family-bold">{name}</h1>
+    <div className="max-w-[50vw] m-auto my-16">
+      <h1 className="font-bold text-2xl font-gilroyBold mb-2">{name}</h1>
 
-      <div className="res-info-container">
-        <div className="res-info">
-          <div className="res-rating font-family-bold margin-b">
-            <div className="res-info-items">
-              <img src={starImage} className="star-img" />
+      <div className="rounded-b-3xl bg-custom-gradient pb-4 px-4 text-sm">
+        <div className="rounded-3xl border border-solid border-[##00000026] bg-white p-6">
+          <div className="flex font-gilroyMedium font-bold text-base mb-1">
+            <div className="mr-1">
+              <img
+                src={starImage}
+                style={{ height: "15px" }}
+                className="star-img"
+              />
             </div>
-            <div className="res-info-items">
+            <div className="mr-1">
               {avgRating} ({totalRatingsString})
             </div>
-            <div className="res-info-items">•</div>
-            <div className="res-info-items">{costForTwoMessage}</div>
+            <div className="mr-1">•</div>
+            <div className="mr-1">{costForTwoMessage}</div>
           </div>
 
-          <div className="res-info-cuisines margin-b font-family-bold">
+          <div className="text-[#ff5200] font-gilroyBold mb-1">
             {cuisines.join(", ")}
           </div>
 
-          <div className="res-delivery font-family-bold margin-b">
+          <div className="font-gilroyBold mb-1">
             {sla?.minDeliveryTime} - {sla?.maxDeliveryTime} min
           </div>
 
-          <div className="res-branch-location font-family">
+          <div className="font-gilroyMedium">
             {locality}, {areaName}
           </div>
         </div>
       </div>
 
       {aggregatedDiscountInfo && (
-        <div className="res-discounts-main-container">
-          <div className="res-discounts-heading font-family-bold">
-            Deals for you!
-          </div>
+        <div className="my-9">
+          <div className=" text-xl font-gilroyBold">Deals for you!</div>
 
           <div>
-            <div className="res-discounts-container">
+            <div className="flex mt-3 overflow-x-auto res-discounts-container">
               {aggregatedDiscountInfo?.descriptionList.map((coupon, index) => {
                 return (
-                  <div className="res-discounts-card" key={index}>
+                  <div
+                    className="flex w-72 bg-[#ffffff00] border border-solid border-[#02060c26] rounded-2xl px-1 py-3 justify-start items-center mr-4 flex-none"
+                    key={index}
+                  >
                     <div>
-                      <img src={offerImage} height="48px" width="48px" />
+                      <img
+                        src={offerImage}
+                        style={{ height: "48px", width: "48px" }}
+                      />
                     </div>
-                    <div className="show-offer-details">
-                      <div className="coupon-description font-family-bold">
-                        {coupon?.meta?.split(" | ")[0]}
+                    <div className="flex flex-col justify-center ml-2">
+                      <div className="text-lg font-gilroyBold">
+                        {coupon?.meta.includes(" | ")
+                          ? coupon?.meta?.split(" | ")[0]
+                          : coupon?.meta?.split("|")[0]}
                       </div>
-                      <div className="coupon-name font-family-bold">
-                        {coupon?.meta?.split(" | ")[1]?.replace("code", "")}
+                      <div className="text-sm font-gilroyMedium text-[#02060c73]">
+                        {coupon?.meta.includes(" | ")
+                          ? coupon?.meta?.split(" | ")[1]
+                          : coupon?.meta?.split("|")[1]}
                       </div>
                     </div>
                   </div>
@@ -115,27 +130,30 @@ const RestaurantMenu = () => {
         </div>
       )}
 
-      <div className="separator"></div>
+      <div className="border-t-[16px] border-solid border-[#02060c0d]"></div>
 
-      <div className="menu-heading">MENU 🍔</div>
-
-      <div className="search-input-container">
-        <input
-          ref={searchInputRef}
-          className="search-menu-input"
-          placeholder="Search for dishes..."
-          value={searchText}
-          onChange={(e) => {
-            setSearchText(e.target.value);
-          }}
-        />
-        <img src={searchIcon} className="search-icon" onClick={searchDishes} />
+      <div className="text-[#02060c99] font-gilroy text-xl text-center my-12">
+        MENU 🍔
       </div>
 
       <div className="menu-continer">
-        {filteredDishes?.map((dish) => (
-          <MenuItem menuItem={dish} key={dish.id} />
-        ))}
+        {resMenu.dishes.map((dish, i) => {
+          return (
+            <div key={dish.title} ref={(el) => (categoryRefs.current[i] = el)}>
+              <RestaurantCategory
+                menuItemCategory={dish}
+                expand={i === showIndex ? true : false}
+                setShowIndex={() => {
+                  if (showIndex === i) {
+                    setShowIndex(null);
+                  } else {
+                    setShowIndex(i);
+                  }
+                }}
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

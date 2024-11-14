@@ -6,32 +6,32 @@ class UserClass extends React.Component {
     this.state = {
       name: null,
     };
-    console.log("Child Constructor");
+    // console.log("Child Constructor");
   }
 
   async componentDidMount() {
-    console.log("Child ComponentDidMount");
+    // console.log("Child ComponentDidMount");
     let data = await fetch("https://api.github.com/users/ChiragSh0023");
     data = await data.json();
     this.setState({
       user: data,
     });
     this.timer = setInterval(() => {
-      console.log("Siuuuuu");
+      // console.log("Siuuuuu");
     }, 1000);
   }
 
   componentDidUpdate() {
-    console.log("Child componentDidUpdate");
+    // console.log("Child componentDidUpdate");
   }
 
   componentWillUnmount() {
     clearInterval(this.timer);
-    console.log("Child componentWillUnmount");
+    // console.log("Child componentWillUnmount");
   }
 
   render() {
-    console.log("Child Render");
+    // console.log("Child Render");
     const { user } = this.state;
     const { name, location, html_url, avatar_url } = user || {};
     return user ? (

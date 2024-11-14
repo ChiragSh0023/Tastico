@@ -1,30 +1,38 @@
 import Logo from "../assets/img/logo.jpg";
 import UserClass from "./UserClass";
 import React from "react";
+import UserContext from "../utils/UserContext";
 
 class AboutClass extends React.Component {
   constructor(props) {
     super(props);
-    console.log("Parent Constructor");
+    // console.log("Parent Constructor");
   }
 
   componentDidMount() {
-    console.log("Parent ComponentDidMount");
+    // console.log("Parent ComponentDidMount");
   }
 
   componentDidUpdate() {
-    console.log("Parent componentDidUpdate");
+    // console.log("Parent componentDidUpdate");
   }
 
   render() {
-    console.log("Parent Render");
+    // console.log("Parent Render");
     return (
-      <div className="main-block font-family">
+      <div className="w-[73vw] my-10 m-auto font-gilroy">
         <div>
-          <img className="about-img" src={Logo} />
+          <img className="block m-auto" src={Logo} />
         </div>
-        <h3 className="heading-block">About us Class</h3>
-        <p className="content-block">
+        <h3 className="text-[#222222] mb-4 font-gilroyBold text-lg">
+          About us
+        </h3>
+        <UserContext.Consumer>
+          {({ loggedInUser }) => {
+            return <p>Hi, {loggedInUser}.</p>;
+          }}
+        </UserContext.Consumer>
+        <p className="text=[#8d8f91] text-base">
           Welcome to Fast Delivery! At Fast Delivery, we are passionate about
           connecting people with the best food from their favorite local
           restaurants, all delivered right to their doorstep. Whether you’re

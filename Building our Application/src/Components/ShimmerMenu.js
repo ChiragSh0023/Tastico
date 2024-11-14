@@ -1,17 +1,15 @@
 const ShimmerMenu = () => {
   return (
-    <div className="shimmer-menu-container">
-      <div className="shimmer-menu-box">
-        <div className="shimmer-menu-content">
-          <div className="box"></div>
-          <div className="shimmer-line"></div>
-          <div className="shimmer-line shimmer-line-2"></div>
-        </div>
-        <div className="shimmer-menu-content">
-          <div className="box"></div>
-          <div className="shimmer-line"></div>
-          <div className="shimmer-line shimmer-line-2"></div>
-        </div>
+    <div className="flex justify-between w-[40vw] m-auto my-16">
+      <div className="flex flex-col  gap-3">
+        <div className="h-52 w-52 bg-[#f0f0f0]"></div>
+        <div className="h-2 w-full bg-[#f0f0f0]"></div>
+        <div className="h-2 w-[50%] bg-[#f0f0f0]"></div>
+      </div>
+      <div className="flex flex-col  gap-3">
+        <div className="h-52 w-52 bg-[#f0f0f0]"></div>
+        <div className="h-2 w-full bg-[#f0f0f0]"></div>
+        <div className="h-2 w-[50%] bg-[#f0f0f0]"></div>
       </div>
     </div>
   );

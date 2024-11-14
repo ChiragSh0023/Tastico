@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from "react";
+import React, { lazy, Suspense, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import Header from "./Components/Header";
 import Body from "./Components/Body";
@@ -9,20 +9,40 @@ import Footer from "./Components/Footer";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import RestaurantMenu from "./Components/RestaurantMenu";
 import Shimmer from "./Components/Shimmer";
+import UserContext from "./utils/UserContext";
 
 const Grocery = lazy(() => import("./Components/Grocery"));
 
 const AppLayout = () => {
+  const [userName, setUserName] = useState("User");
+
+  // Authentication Logic
+  useEffect(() => {
+    // api call
+    setTimeout(() => {
+      const response = {
+        name: "Chirag",
+      };
+      setUserName(response.name);
+    }, 1000);
+  }, []);
+
+  const updateUserName = (text) => {
+    setUserName(text);
+  };
+
   return (
-    <div className="app">
-      <Header />
-      <Outlet />
-      <Footer />
-    </div>
+    <UserContext.Provider value={{ loggedInUser: userName, updateUserName }}>
+      <div className="app">
+        <Header />
+        <Outlet />
+        <Footer />
+      </div>
+    </UserContext.Provider>
   );
 };
 
-const appRouter = createBrowserRouter([
+const routes = [
   {
     path: "/",
     element: <AppLayout />,
@@ -54,7 +74,9 @@ const appRouter = createBrowserRouter([
     ],
     errorElement: <Error />,
   },
-]);
+];
+
+const appRouter = createBrowserRouter(routes);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(<RouterProvider router={appRouter} />);
