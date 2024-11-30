@@ -1,137 +1,204 @@
 import RestaurantCard, { withOneLiteDelivery } from "./RestaurantCard";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/useOnlineStatus";
 import Offline from "./Offline";
 import { getRestaurantURL } from "../utils/constants";
-import UserContext from "../utils/UserContext";
+import rightArrow from "../assets/img/right-arrow.png";
+import leftArrow from "../assets/img/left-arrow.png";
+import { whatsOnYourMindDishBaseUrl } from "../utils/constants";
+import { useRef } from "react";
+import { useSelector } from "react-redux";
 
 const Body = () => {
   // Creating a local state variable
   let [listOfRestaurants, setListOfRestaurants] = useState([]);
   const [initialListOfRestaurants, setInitialListOfRestaurants] = useState([]);
-  let [filterMode, setFilterMode] = useState(false);
-  let [searchText, setSearchText] = useState("");
+  const [dishOptions, setDishOptions] = useState([]);
+  const [topRestChains, setTopRestChains] = useState([]);
 
   const onlineStatus = useOnlineStatus();
   if (onlineStatus === false) {
     return <Offline />;
   }
 
-  const RestaurantCardOneLite = withOneLiteDelivery(RestaurantCard);
+  const loggedInUser = useSelector((store) => store.user.name);
 
-  const { loggedInUser, updateUserName } = useContext(UserContext);
-  let [userNameText, setUserNameText] = useState(loggedInUser);
+  const RestaurantCardOneLite = withOneLiteDelivery(RestaurantCard);
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    setUserNameText(loggedInUser);
-  }, [loggedInUser]);
-
   const fetchData = async () => {
     let response = await fetch(getRestaurantURL);
     response = await response.json();
+    const whatsOnYourMind =
+      response?.data?.cards[0]?.card?.card?.gridElements?.infoWithStyle?.info;
+    const topRestChains =
+      response?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+        ?.restaurants;
     const restaurants =
       response.data?.cards?.[4]?.card?.card?.gridElements?.infoWithStyle
         ?.restaurants;
     // console.log(restaurants);
+    setDishOptions(whatsOnYourMind);
+    setTopRestChains(topRestChains);
     setInitialListOfRestaurants(restaurants);
     setListOfRestaurants(restaurants);
   };
 
-  const toggleFilter = () => {
-    filterMode = !filterMode;
-    let filteredRestaurants = initialListOfRestaurants;
-    if (filterMode) {
-      filteredRestaurants = initialListOfRestaurants.filter(
-        (restaurant) => restaurant?.info?.avgRating >= 4.5
-      );
-    }
-    setListOfRestaurants(filteredRestaurants);
-    setFilterMode(filterMode);
-    setSearchText("");
+  const scrollContainerRef = useRef(null);
+  const scrollContainerTopRestRef = useRef(null);
+
+  const scrollRight = () => {
+    scrollContainerRef?.current?.scrollBy({
+      left: -300,
+      behavior: "smooth",
+    });
   };
 
-  const searchInRestaurants = () => {
-    const searchedRestaurants = initialListOfRestaurants.filter((restuarant) =>
-      restuarant?.info?.name.toLowerCase().includes(searchText.toLowerCase())
-    );
-    setListOfRestaurants(searchedRestaurants);
+  const scrollLeft = () => {
+    scrollContainerRef?.current?.scrollBy({
+      left: 300,
+      behavior: "smooth",
+    });
   };
 
-  const onInputClick = () => {
-    updateUserName(userNameText);
+  const scrollRightTopRest = () => {
+    scrollContainerTopRestRef.current.scrollBy({
+      left: -300,
+      behavior: "smooth",
+    });
+  };
+
+  const scrollLeftTopRest = () => {
+    scrollContainerTopRestRef.current.scrollBy({
+      left: 300,
+      behavior: "smooth",
+    });
   };
 
   return initialListOfRestaurants?.length === 0 ? (
     <Shimmer />
   ) : (
     <div className="body">
-      <div className="w-[90vw] m-auto my-8 flex justify-between">
-        <div>
-          <input
-            type="text"
-            className="border mr-2 border-black px-2 py-1 text-sm"
-            value={searchText}
-            onChange={(e) => {
-              setSearchText(e?.target?.value);
-            }}
-          />
+      <div className="w-[75vw] m-auto">
+        {/**Whats on your mind */}
+        <div className="m-auto font-gilroyBold text-2xl  my-8">
+          <div className="flex justify-between">
+            <div className="">{loggedInUser}, what's on your mind?</div>
+            <div className="flex gap-3">
+              <div
+                className="h-[24px] w-[24px] p-1 rounded-full bg-[#02060c26] flex justify-center items-center cursor-pointer"
+                onClick={scrollRight}
+              >
+                <img src={leftArrow} className="" alt="left-arrow" />
+              </div>
+              <div
+                className="h-[24px] w-[24px] p-1 rounded-full bg-[#02060c26] flex justify-center items-center cursor-pointer"
+                onClick={scrollLeft}
+              >
+                <img src={rightArrow} className="" alt="right-arrow" />
+              </div>
+            </div>
+          </div>
 
-          <button
-            className="border border-solid border-grey py-1 px-2 mx-2 text-sm rounded-lg"
-            onClick={searchInRestaurants}
+          <div
+            className="flex overflow-x-auto no-scollbar mt-4"
+            ref={scrollContainerRef}
           >
-            Search
-          </button>
+            {dishOptions.length > 0 &&
+              dishOptions.map((dish) => {
+                return (
+                  <div
+                    className="flex flex-col flex-none pl-4 pr-6 cursor-pointer"
+                    key={dish.id}
+                  >
+                    <div>
+                      <img
+                        src={whatsOnYourMindDishBaseUrl + dish.imageId}
+                        className="w-[144px] h-[180px]"
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+          </div>
+        </div>
 
-          <button
-            className="border border-solid border-grey py-1 px-2 mx-2 text-sm rounded-lg"
-            onClick={toggleFilter}
+        <div className="border border-solid border-[#02060c0d] my-12"></div>
+
+        {/**Top restaurant chains in Jaipur */}
+        <div className="flex flex-col">
+          <div className="flex justify-between font-gilroyBold text-2xl mb-4">
+            <div>Top restaurant chains in Jaipur</div>
+            <div className="flex gap-3">
+              <div
+                className="h-[24px] w-[24px] p-1 rounded-full bg-[#02060c26] flex justify-center items-center cursor-pointer"
+                onClick={scrollRightTopRest}
+              >
+                <img src={leftArrow} className="" alt="left-arrow" />
+              </div>
+              <div
+                className="h-[24px] w-[24px] p-1 rounded-full bg-[#02060c26] flex justify-center items-center cursor-pointer"
+                onClick={scrollLeftTopRest}
+              >
+                <img src={rightArrow} className="" alt="right-arrow" />
+              </div>
+            </div>
+          </div>
+
+          {/**Top Restaurant Chains in Jaipur */}
+          <div
+            className="flex overflow-x-auto no-scollbar gap-9 mt-9"
+            ref={scrollContainerTopRestRef}
           >
-            {filterMode ? "Get All Restaurants" : "Get Top Rated Restaurants"}
-          </button>
+            {topRestChains.length > 0 &&
+              topRestChains.map((restaurant) => {
+                return (
+                  <Link
+                    to={`/restaurant/${restaurant?.info?.id}`}
+                    key={restaurant?.info?.id}
+                  >
+                    {restaurant?.info?.badges?.imageBadges?.length > 0 ? (
+                      <RestaurantCardOneLite resData={restaurant} />
+                    ) : (
+                      <RestaurantCard resData={restaurant} />
+                    )}
+                  </Link>
+                );
+              })}
+          </div>
         </div>
-        <div className="flex">
-          <input
-            type="text"
-            value={userNameText}
-            className="border mr-2 border-black px-2 py-1 text-sm"
-            onChange={(e) => {
-              setUserNameText(e.target.value);
-            }}
-          />
-          <button
-            className="border border-solid border-grey py-1 px-2 mx-2 text-sm rounded-lg"
-            onClick={onInputClick}
-          >
-            Update Username
-          </button>
-        </div>
+
+        <div className="border border-solid border-[#02060c0d] my-12"></div>
+
+        {listOfRestaurants.length === 0 ? (
+          <div className="w-[90vw] m-auto mb-4">No result found 😅</div>
+        ) : (
+          <div className="flex flex-col mb-16">
+            <div className="font-gilroyBold text-2xl mb-12">
+              Restaurants with online food delivery in Jaipur
+            </div>
+            <div className="grid grid-cols-4 gap-y-9 w-full gap-x-6">
+              {listOfRestaurants.map((restaurant) => (
+                <Link
+                  to={`/restaurant/${restaurant?.info?.id}`}
+                  key={restaurant?.info?.id}
+                >
+                  {restaurant?.info?.badges?.imageBadges?.length > 0 ? (
+                    <RestaurantCardOneLite resData={restaurant} />
+                  ) : (
+                    <RestaurantCard resData={restaurant} />
+                  )}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-
-      {listOfRestaurants.length === 0 ? (
-        <div className="w-[90vw] m-auto mb-4">No result found 😅</div>
-      ) : (
-        <div className="flex flex-wrap gap-x-28 gap-y-12 w-[90vw] m-auto my-8">
-          {listOfRestaurants.map((restaurant) => (
-            <Link
-              to={`/restaurant/${restaurant?.info?.id}`}
-              key={restaurant?.info?.id}
-            >
-              {restaurant?.info?.badges?.imageBadges?.length > 0 ? (
-                <RestaurantCardOneLite resData={restaurant} />
-              ) : (
-                <RestaurantCard resData={restaurant} />
-              )}
-            </Link>
-          ))}
-        </div>
-      )}
     </div>
   );
 };

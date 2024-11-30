@@ -6,7 +6,10 @@ module.exports = {
       fontFamily: {
         gilroyMedium: ["Gilroy_Medium", "sans-serif"],
         gilroyBold: ["Gilroy_Bold", "sans-serif"],
+        gilroySemiBold: ["Gilroy_SemiBold", "sans-serif"],
         gilroy: ["Gilroy", "sans-serif"],
+        metropolis: ["Metropolis", "arial"],
+        metropolisBold: ["Metropolis_Bold", "arial"],
       },
       backgroundImage: {
         "custom-gradient":

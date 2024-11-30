@@ -55,6 +55,7 @@ const RestaurantMenu = () => {
     locality,
     areaName,
     aggregatedDiscountInfo,
+    cloudinaryImageId,
   } = resMenu;
 
   return (
@@ -63,7 +64,7 @@ const RestaurantMenu = () => {
 
       <div className="rounded-b-3xl bg-custom-gradient pb-4 px-4 text-sm">
         <div className="rounded-3xl border border-solid border-[##00000026] bg-white p-6">
-          <div className="flex font-gilroyMedium font-bold text-base mb-1">
+          <div className="flex font-gilroySemiBold font-bold text-base mb-1">
             <div className="mr-1">
               <img
                 src={starImage}
@@ -133,7 +134,7 @@ const RestaurantMenu = () => {
       <div className="border-t-[16px] border-solid border-[#02060c0d]"></div>
 
       <div className="text-[#02060c99] font-gilroy text-xl text-center my-12">
-        MENU 🍔
+        MENU
       </div>
 
       <div className="menu-continer">
@@ -142,6 +143,11 @@ const RestaurantMenu = () => {
             <div key={dish.title} ref={(el) => (categoryRefs.current[i] = el)}>
               <RestaurantCategory
                 menuItemCategory={dish}
+                resInfo={{
+                  resName: name,
+                  resLocality: locality,
+                  resCloudinaryImageId: cloudinaryImageId,
+                }}
                 expand={i === showIndex ? true : false}
                 setShowIndex={() => {
                   if (showIndex === i) {

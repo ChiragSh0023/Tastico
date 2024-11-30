@@ -17,6 +17,30 @@
   src: url("./src/fonts/gilroy/Gilroy-Regular.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "Gilroy_SemiBold";
+  src: url("./src/fonts/gilroy/Gilroy-SemiBold.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "Metropolis";
+  src: url("./src/fonts/Metropolis/metropolis.regular.otf") format("truetype");
+}
+
+@font-face {
+  font-family: "Metropolis_Bold";
+  src: url("./src/fonts/Metropolis/metropolis.semi-bold.otf") format("truetype");
+}
+
+@layer utilities {
+  .thin-scrollbar::-webkit-scrollbar {
+    display: block;
+    width: 4px;
+    background-color: #888;
+    border-radius: 4px;
+  }
+}
+
 /*
 Css for User component
 */
@@ -81,4 +105,53 @@ This is the CSS for error component
 
 .error-ele {
   font-family: "Gilroy_Medium";
+}
+
+.max-h {
+  max-height: calc(100vh - 270px);
+}
+
+/*
+This is the CSS FOR custom checkbox
+*/
+
+.main {
+  position: relative;
+  cursor: pointer;
+}
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  border: 1px solid #7e808c;
+}
+
+input[type="checkbox"]:after {
+  content: "";
+  position: absolute;
+  width: 6px;
+  height: 12px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  display: none;
+}
+
+input[type="checkbox"]:checked {
+  background-color: #60b246;
+}
+
+input[type="checkbox"]:checked:after {
+  display: block;
+}
+
+/*No scrollbar*/
+.no-scollbar::-webkit-scrollbar {
+  display: none;
 }

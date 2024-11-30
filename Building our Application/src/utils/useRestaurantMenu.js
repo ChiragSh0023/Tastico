@@ -26,6 +26,8 @@ const useRestaurantMenu = (resId) => {
       areaName: menu?.data?.cards[2]?.card?.card?.info?.areaName,
       aggregatedDiscountInfo:
         menu?.data?.cards[2]?.card?.card?.info?.aggregatedDiscountInfo,
+      cloudinaryImageId:
+        menu?.data?.cards[2]?.card?.card?.info?.cloudinaryImageId,
     };
 
     const allDishWithCategory = [];
@@ -71,11 +73,6 @@ const useRestaurantMenu = (resId) => {
   };
 
   const extractDishesFromCategory = (dishArray, allDishWithCategory) => {
-    let categoryObj = {
-      title: dishArray?.title,
-      categories: [],
-    };
-
     dishArray?.categories.forEach((dishCategory) => {
       let dishesArr = [];
       dishCategory?.itemCards.forEach((dish) => {
@@ -85,10 +82,8 @@ const useRestaurantMenu = (resId) => {
         title: dishCategory?.title,
         dishes: dishesArr,
       };
-      categoryObj.categories.push(obj);
+      allDishWithCategory.push(obj);
     });
-
-    allDishWithCategory.push(categoryObj);
   };
 
   return resInfo;

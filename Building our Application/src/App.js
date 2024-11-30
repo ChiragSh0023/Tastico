@@ -2,20 +2,24 @@ import React, { lazy, Suspense, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import Header from "./Components/Header";
 import Body from "./Components/Body";
-import AboutClass from "./Components/About";
 import Contact from "./Components/Contact";
 import Error from "./Components/Error";
 import Footer from "./Components/Footer";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import RestaurantMenu from "./Components/RestaurantMenu";
 import Shimmer from "./Components/Shimmer";
-import UserContext from "./utils/UserContext";
+import appStore from "./utils/appStore";
+import { Provider, useSelector } from "react-redux";
+import UserInfo from "./Components/UserInfo";
+import { updateName } from "./utils/Redux Slices/userSlice";
+import { useDispatch } from "react-redux";
 
-const Grocery = lazy(() => import("./Components/Grocery"));
+// Lazy loading of cart items
+const Cart = lazy(() => import("./Components/Cart"));
 
 const AppLayout = () => {
-  const [userName, setUserName] = useState("User");
-
+  const loggedInUser = useSelector((store) => store.user.name);
+  const dispatch = useDispatch();
   // Authentication Logic
   useEffect(() => {
     // api call
@@ -23,22 +27,16 @@ const AppLayout = () => {
       const response = {
         name: "Chirag",
       };
-      setUserName(response.name);
+      dispatch(updateName(response.name));
     }, 1000);
   }, []);
 
-  const updateUserName = (text) => {
-    setUserName(text);
-  };
-
   return (
-    <UserContext.Provider value={{ loggedInUser: userName, updateUserName }}>
-      <div className="app">
-        <Header />
-        <Outlet />
-        <Footer />
-      </div>
-    </UserContext.Provider>
+    <div className="app">
+      <Header />
+      <Outlet />
+      <Footer />
+    </div>
   );
 };
 
@@ -52,24 +50,24 @@ const routes = [
         element: <Body />,
       },
       {
-        path: "/about",
-        element: <AboutClass />,
-      },
-      {
         path: "/contact",
         element: <Contact />,
       },
       {
-        path: "/grocery",
+        path: "/restaurant/:resId",
+        element: <RestaurantMenu />,
+      },
+      {
+        path: "/cart",
         element: (
           <Suspense fallback={<Shimmer />}>
-            <Grocery />
+            <Cart />
           </Suspense>
         ),
       },
       {
-        path: "/restaurant/:resId",
-        element: <RestaurantMenu />,
+        path: "/userinfo",
+        element: <UserInfo />,
       },
     ],
     errorElement: <Error />,
@@ -79,4 +77,8 @@ const routes = [
 const appRouter = createBrowserRouter(routes);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<RouterProvider router={appRouter} />);
+root.render(
+  <Provider store={appStore}>
+    <RouterProvider router={appRouter} />
+  </Provider>
+);

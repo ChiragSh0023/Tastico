@@ -3,7 +3,7 @@ import MenuItem from "./MenuItem";
 import downArrow from "../assets/img/down-arrow.png";
 import upArrow from "../assets/img/up-arrow.png";
 
-const Accordion = ({ menuItemCategory, expand, setShowIndex }) => {
+const Accordion = ({ menuItemCategory, expand, setShowIndex, resInfo }) => {
   const { title, dishes } = menuItemCategory;
 
   const togglePanel = () => {
@@ -32,7 +32,9 @@ const Accordion = ({ menuItemCategory, expand, setShowIndex }) => {
       {expand && (
         <div>
           {dishes.map((dish) => {
-            return <MenuItem menuItem={dish} key={dish?.id} />;
+            return (
+              <MenuItem menuItem={dish} key={dish?.id} resInfo={resInfo} />
+            );
           })}
         </div>
       )}

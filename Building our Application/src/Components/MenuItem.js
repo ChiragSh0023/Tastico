@@ -2,9 +2,28 @@ import vegIcon from "../assets/img/veg-icon.jpg";
 import nonVegIcon from "../assets/img/nonveg-icon.webp";
 import starRating from "../assets/img/item-rating.svg";
 import { menuItemImageUrl } from "../utils/constants";
+import { useDispatch } from "react-redux";
+import { addItem } from "../utils/Redux Slices/cartSlice";
+import SnackBar from "./Snackbar";
+import { useState } from "react";
 
 const MenuItem = (props) => {
-  const { menuItem } = props;
+  const { menuItem, resInfo } = props;
+  const [snackbar, setSnackbar] = useState({ show: false, message: "" });
+
+  const dispatch = useDispatch();
+
+  const handleMenuItemClick = (menuItem) => {
+    menuItem.resInfo = resInfo;
+    dispatch(addItem(menuItem));
+
+    setSnackbar({ show: true, message: "Item added successfully!" });
+
+    setTimeout(() => {
+      setSnackbar({ show: false, message: "" });
+    }, 3000);
+  };
+
   return (
     <>
       <div className="flex justify-between my-3">
@@ -47,6 +66,9 @@ const MenuItem = (props) => {
             />
           )}
           <button
+            onClick={() => {
+              handleMenuItemClick(menuItem, resInfo);
+            }}
             className={`border border-solid border-[#f0f0f0] w-28 rounded-lg h-9 text-center bg-white ${
               menuItem.imageId ? "absolute bottom-[-10px]" : ""
             }`}
@@ -56,6 +78,8 @@ const MenuItem = (props) => {
         </div>
       </div>
       <div className="border-[0.5px] border-solid border-[#d3d3d] my-5"></div>
+
+      {snackbar.show && <SnackBar message={snackbar.message} />}
     </>
   );
 };
