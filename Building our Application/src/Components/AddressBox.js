@@ -3,9 +3,10 @@ import homeIcon from "../assets/img/home.png";
 import otherIcon from "../assets/img/otherAddress.png";
 import workIcon from "../assets/img/workIcon.png";
 import { deleteAddress, editAddress } from "../utils/Redux Slices/userSlice";
-import { useState } from "react";
+import React, { useMemo, useState } from "react";
 
-const AddressBox = ({ type, address, mode }) => {
+// Only Rerenders the component if the props change
+const AddressBox = React.memo(({ type, address, mode }) => {
   const [editMode, setEditMode] = useState(false);
   const [typeSelected, setTypeSelected] = useState(type);
   const [addressSelected, setAddressSelected] = useState(address);
@@ -26,6 +27,10 @@ const AddressBox = ({ type, address, mode }) => {
     );
     setEditMode(false);
   };
+
+  const deliveryTime = useMemo(() =>
+    Math.floor(Math.random() * (60 - 15 + 1) + 15)
+  );
 
   return (
     <div className="w-80 cursor-pointer mr-6 mb-6 border border-solid border-[#e9e9eb] hover:shadow-lg font-metropolis">
@@ -54,9 +59,7 @@ const AddressBox = ({ type, address, mode }) => {
             <div>
               <div className="text-[#282c3f] text-base mb-1">{type}</div>
               <div className="text-[#93959f] text-xs h-16">{address}</div>
-              <div className="text-xs mb-4">
-                {Math.floor(Math.random() * (60 - 15 + 1) + 15)} MINS
-              </div>
+              <div className="text-xs mb-4">{deliveryTime} MINS</div>
 
               {/** From Cart Component */}
               {mode === "cart" && (
@@ -117,13 +120,13 @@ const AddressBox = ({ type, address, mode }) => {
 
               <div className="mt-3">
                 <div
-                  className="bg-[#ff5200] inline-block h-9 text-[#fff] pt-2 px-2 text-[12px] tracking-[0.3px] font-metropolisBold self-start"
+                  className="bg-[#ff5200] inline-block h-9 text-[#fff] pt-2 px-2 text-[12px] tracking-[0.3px] font-metropolisBold"
                   onClick={saveDetails}
                 >
                   SAVE
                 </div>
                 <div
-                  className="bg-[#ff5200] inline-block h-9 text-[#fff] pt-2 px-2 text-[12px] tracking-[0.3px] font-metropolisBold self-start my-3 ml-3"
+                  className="bg-[#ff5200] inline-block h-9 text-[#fff] pt-2 px-2 text-[12px] tracking-[0.3px] font-metropolisBold my-3 ml-3"
                   onClick={() => {
                     setEditMode(false);
                     setAddressSelected(address);
@@ -139,6 +142,6 @@ const AddressBox = ({ type, address, mode }) => {
       </div>
     </div>
   );
-};
+});
 
 export default AddressBox;

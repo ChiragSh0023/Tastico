@@ -15,7 +15,7 @@ const Accordion = ({ menuItemCategory, expand, setShowIndex, resInfo }) => {
       {/** Accordion Header */}
       <div className="" onClick={togglePanel}>
         <button className="w-full flex justify-between items-center">
-          <div className="font-gilroyBold text-lg mt-6 mb-4">
+          <div className="font-gilroyBold text-lg my-6">
             {title} ({dishes?.length})
           </div>
           <div>

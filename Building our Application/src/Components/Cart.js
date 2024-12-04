@@ -219,7 +219,7 @@ const Cart = () => {
 
                 <div className="flex text-[#686b78] justify-between opacity-90">
                   <div className="">Item Total</div>
-                  <div className="">₹ {total}</div>
+                  <div className="">₹ {total.toFixed(2)}</div>
                 </div>
 
                 <div className="flex text-[#686b78] justify-between opacity-90">

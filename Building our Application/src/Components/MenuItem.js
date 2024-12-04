@@ -21,7 +21,7 @@ const MenuItem = (props) => {
 
     setTimeout(() => {
       setSnackbar({ show: false, message: "" });
-    }, 3000);
+    }, 2000);
   };
 
   return (
