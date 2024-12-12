@@ -12,6 +12,7 @@ const cartSlice = createSlice({
         state.items.length > 0 &&
         action?.payload?.resInfo?.resName != state.items[0]?.resInfo?.resName
       ) {
+        // If items from another restaurant is added -> clear previous items
         state.items.length = 0;
         state.total = 0;
       }

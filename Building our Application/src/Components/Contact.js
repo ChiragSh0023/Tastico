@@ -79,7 +79,7 @@ const Contact = () => {
               }
             />
             <AccordionForContactUs
-              question={"I want to unsubscribe from Rustic Spot communications"}
+              question={"I want to unsubscribe"}
               ans={
                 "Please drop us an email mentioning the channels you would like to be unsubscribed from. We will take an action and confirm within 24-48 hours"
               }
